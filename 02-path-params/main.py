@@ -42,3 +42,27 @@ async def read_user(user_id: str):
     # Returns a specific user by ID
     # IDで指定されたユーザーを返す
     return {"user_id": user_id}
+
+# Step 3-A: Define a StrEnum for predefined values
+# 許容値を事前定義するための StrEnum クラスを定義
+class ModelName(str, Enum):
+    # Inheriting from str allows FastAPI/OpenAPI to treat values as strings
+    # str を継承することで OpenAPI がstring型として認識できる
+    alexnet = "alexnet"
+    resnet = "resnet"
+    lenet = "lenet"
+
+# Step 3-B: Endpoint using the Enum type annotation
+# Enum 型アノテーションを使うエンドポイント
+@app.get("/models/{model_name}")
+async def get_model(model_name: ModelName):
+    # Compare with enum member using `is`
+    # `is` でenum メンバーと比較する
+    if model_name is ModelName.alexnet:
+        return {"model_name": model_name, "message": "Deep Learning FTW!"}
+
+    # Access the raw string value with .value
+    # .value で生文字列を取得できる
+    if model_name.value == "lenet":
+        return {"model_name": model_name, "message": "LeCNN all the images"}
+    return {"model_name": model_name, "message": "Have some residuals"}
