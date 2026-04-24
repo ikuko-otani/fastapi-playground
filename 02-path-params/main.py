@@ -28,3 +28,17 @@ async def read_item_basic(item_id):
 @app.get("/items/typed/{item_id}")
 async def read_item_typed(item_id: int):
     return {"item_id": item_id}
+
+# Step 2: Route evaluation order — FIXED path must come BEFORE parameterized
+# 固定パスは必ずパラメータ付きパスより先に定義する（順番重要）
+@app.get("/user/me")
+async def read_user_me():
+    # Return the current user
+    # 現在のユーザー情報を返す
+    return {"user_id": "the current user"}
+
+@app.get("/users/{user_id}")
+async def read_user(user_id: str):
+    # Returns a specific user by ID
+    # IDで指定されたユーザーを返す
+    return {"user_id": user_id}
