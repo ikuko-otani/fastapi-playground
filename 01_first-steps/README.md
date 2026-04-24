@@ -34,9 +34,9 @@ This chapter covers the absolute basics of FastAPI:
 
 ## Interview Tips / 面接対策
 
-- 💡 **"Why does FastAPI auto-generate OpenAPI docs?"**  
+- 💡 **"Why does FastAPI auto-generate OpenAPI docs?"**
   → FastAPI reads Python type hints at runtime and converts them into JSON Schema, which powers both `/docs` and `/redoc`.
-- 💡 **"When should you use `async def` vs `def`?"**  
+- 💡 **"When should you use `async def` vs `def`?"**
   → Use `async def` when calling async libraries (e.g., `asyncpg`, `httpx`). Using `def` with blocking I/O blocks the entire event loop.
 
 ## Files / ファイル構成
@@ -46,10 +46,3 @@ This chapter covers the absolute basics of FastAPI:
 ├── main.py     # Exercise file (fill in the TODOs)
 └── README.md   # This file
 ```
-
-## Screenshot Placeholder / スクリーンショット記録欄
-
-> After completing the exercise, paste a screenshot of `http://localhost:8000/docs` here.
-> 演習完了後、`http://localhost:8000/docs` のスクリーンショットをここに貼ってください。
-
-<!-- ![Swagger UI Screenshot](./swagger-screenshot.png) -->
