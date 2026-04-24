@@ -20,6 +20,9 @@ async def root():
 
 # TODO: Step 3 — Add GET /health endpoint
 # ヘルスチェック用エンドポイント GET /health を追加する
+@app.get("/health")
+async def health_check():
+    return {"status": "OK"}
 
 # TODO: Step 4 — Add async GET /items/{item_id} endpoint
 # 非同期版エンドポイント GET /items/{item_id} を追加する
