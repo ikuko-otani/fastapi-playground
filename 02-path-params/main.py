@@ -66,3 +66,11 @@ async def get_model(model_name: ModelName):
     if model_name.value == "lenet":
         return {"model_name": model_name, "message": "LeCNN all the images"}
     return {"model_name": model_name, "message": "Have some residuals"}
+
+# Step 4: Path parameter that itself contains slashes using :path converter
+# スラッシュを含むパスパラメータ — :path コンバーターを使う
+@app.get("/files/{file_path:path}")
+async def read_file(file_path: str):
+    # file_path can be e.g. "home/johndoe/report.txt"
+    # file_path は "home/johndoe/report.txt" のようなパスを含む文字列
+    return {"file_path": file_path}
