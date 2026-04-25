@@ -47,3 +47,19 @@ async def read_user_item(
     if not short:
         item.update({"description": "Long description here"})
     return item
+
+# Required query parameter (no default value = required by FastAPI)
+# 必須クエリパラメータ（デフォルト値なし＝必須）
+@app.get("/required-demo/{item_id}")
+async def raad_user_item_required(item_id: str, needy: str):
+    # needy has no default, so it's REQUIRED
+    # needyはデフォルト値がないため必須パラメータになる
+    return {"item_id": item_id, "needy": needy}
+
+# Mix of required, default, and optional params
+# 必須・デフォルト値あり・Optional の3種類を同一エンドポイントに混在
+@app.get("/mixed-required/{item_id}")
+async def read_user_item_mixed(
+    item_id: str, needy: str, skip: int = 0, limit: int | None = None
+):
+    return {"item_id": item_id, "needy": needy, "skip": skip, "limit": limit}
