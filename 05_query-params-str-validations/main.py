@@ -6,8 +6,10 @@
 
 # TODO: Import FastAPI, Query, Annotated, and AfterValidator as you progress through the steps
 # 各ステップに進みながら FastAPI, Query, Annotated, AfterValidator をインポート
+import random
 from typing import Annotated
 from fastapi import FastAPI, Query
+from pydantic import AfterValidator
 
 # Create FastAPI instance
 # FastAPI インスタンスを生成
@@ -97,3 +99,22 @@ async def read_items_hidden(
 
 # TODO: Step 5 — Custom validation with AfterValidator (Pydantic v2)
 # Step 5 — AfterValidator を使ったカスタムバリデーション（Pydantic v2）
+
+# Custom validator: transaction ID must start with "txn-"
+#カスタムバリデーター：取引IDは "txn-" で始まらなければならない
+def check_transaction_id(v: str) -> str:
+    if not v.startswith("txn-"):
+        raise ValueError('Transaction ID must start with "txn-"')
+    return v
+
+
+@app.get("/transactions/")
+async def read_transaction(
+    txn_id: Annotated[
+        str | None,
+        AfterValidator(check_transaction_id)
+        # Runs AFTER type validation (str check) is complete
+        # 型バリデーション（str チェック）完了後に実行される
+    ] = None,
+):
+    return {"txn_id": txn_id}
