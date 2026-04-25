@@ -15,15 +15,34 @@ app = FastAPI()
 
 # TODO: Step 1 — Basic optional query parameter (no validation)
 # Step 1 — バリデーションなしのオプションクエリパラメーター
+# @app.get("/items/")
+# async def read_items(q: str | None = None):
+#     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+#     if q:
+#         results.update({"q": q})
+#     return results
+
+
+# TODO: Step 2 — Add Query() with min_length / max_length / pattern
+# Step 2 — Query() に min_length / max_length / pattern を追加する
 @app.get("/items/")
-async def read_items(q: str | None = None):
+async def read_items(
+    q: Annotated[
+        str | None,
+        Query(
+            min_length=3,
+            max_length=50,
+            pattern="^[a-z]+$",  # lowercase letters only
+            title="Search query",
+            description="Filter items by keyword (lowercase letters, 3-50 chars)"
+        ),
+    ] = None
+):
     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
     if q:
         results.update({"q": q})
     return results
 
-# TODO: Step 2 — Add Query() with min_length / max_length / pattern
-# Step 2 — Query() に min_length / max_length / pattern を追加する
 
 # TODO: Step 3 — Required query parameter & list query parameter
 # Step 3 — 必須クエリパラメーターとリスト型クエリパラメーター
