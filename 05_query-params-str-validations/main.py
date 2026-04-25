@@ -54,6 +54,7 @@ async def read_items_required(
 ):
     return {"q": q}
 
+
 @app.get("/items/multi")
 async def read_items_multi(
     q: Annotated[list[str] | None, Query()] = None
@@ -62,8 +63,37 @@ async def read_items_multi(
 ):
     return {"q": q}
 
+
 # TODO: Step 4 — alias, deprecated, include_in_schema=False
 # Step 4 — alias（別名）、deprecated（非推奨）、include_in_schema=False
+@app.get("/items/aliased")
+async def read_items_aliased(
+    q: Annotated[
+        str | None,
+        Query(
+            alias="item-query",
+            # URL uses "item-query", Python uses "q"
+            # URL では "item-query"、Python 変数名は "q"
+            deprecated=True,
+            # shown as deprecated in /docs
+            # /docs 上で非推奨として表示
+        ),
+    ] = None,
+):
+    return {"item_query": q}
+
+
+@app.get("/items/hidden")
+async def read_items_hidden(
+    internal_flag: Annotated[
+        str | None,
+        Query(include_in_schema=False)
+        # hidden from OpenAPI / Swagger UI
+        # OpenAPI・Swagger UI から非表示
+    ] = None,
+):
+    return {"flag": internal_flag}
+
 
 # TODO: Step 5 — Custom validation with AfterValidator (Pydantic v2)
 # Step 5 — AfterValidator を使ったカスタムバリデーション（Pydantic v2）
