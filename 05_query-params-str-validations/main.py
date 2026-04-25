@@ -46,6 +46,21 @@ async def read_items(
 
 # TODO: Step 3 — Required query parameter & list query parameter
 # Step 3 — 必須クエリパラメーターとリスト型クエリパラメーター
+@app.get("/items/required")
+async def read_items_required(
+    q: Annotated[str, Query(min_length=3)]
+    # No default value = required parameter
+    # デフォルト値なし = 必須パラメーター
+):
+    return {"q": q}
+
+@app.get("/items/multi")
+async def read_items_multi(
+    q: Annotated[list[str] | None, Query()] = None
+    # list[str] must be wrapped in Query() or FastAPI treats it as request body
+    # list[str] は Query() でラップ必須。ないとリクエストボディと解釈される
+):
+    return {"q": q}
 
 # TODO: Step 4 — alias, deprecated, include_in_schema=False
 # Step 4 — alias（別名）、deprecated（非推奨）、include_in_schema=False
