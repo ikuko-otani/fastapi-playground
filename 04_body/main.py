@@ -68,7 +68,6 @@ async def create_item_with_tax(item: Item):
     return item_dict
 
 
-
 # ============================================================
 # STEP 4: PUT endpoint – body + path parameter
 # ボディ＋パスパラメータの組み合わせ
@@ -77,6 +76,14 @@ async def create_item_with_tax(item: Item):
 # 💡 FastAPI auto-detects: path param from path, Pydantic model from body
 # FastAPIはパスパラメータとボディを型ヒントで自動判別する
 
+# PUT endpoint — body + path parameter
+# ボディとパスパラメータを組み合わせたPUTエンドポイント
+@app.put("/items/{item_id}")
+async def update_item(item_id: int, item: Item):
+    # FastAPI knows: item_id comes from path, item comes from body
+    # FastAPIが型ヒントから自動判別：item_idはパス、itemはボディ
+    return {"item_id": item_id, **item.model_dump()}
+
 
 # ============================================================
 # STEP 5: PUT endpoint – body + path + query
@@ -84,3 +91,14 @@ async def create_item_with_tax(item: Item):
 # ============================================================
 # TODO: @app.put("/items/{item_id}/full") add optional query param q: str | None = None
 # クエリパラメータqも加えた完全版エンドポイント
+
+# PUT endpoint — body + path + query
+# ボディ＋パス＋クエリの全部乗せエンドポイント
+@app.put("/items/{item_id}/full")
+async def update_item_full(item_id: int, item: Item, q: str | None = None):
+    # q is a query parameter because it's a singular type with a default
+    # qはsingular型＋デフォルト値なのでクエリパラメータと判別される
+    result = {"item_id": item_id, **item.model_dump()}
+    if q:
+        result.update({"q": q})
+    return result
