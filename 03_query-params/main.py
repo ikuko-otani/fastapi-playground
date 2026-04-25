@@ -21,3 +21,16 @@ async def read_items(skip: int = 0, limit: int = 10):
     # skip and limit are query params; inferred from type hints
     # skip・limitはURLパスにないので自動的にクエリパラメータと認識
     return fake_item_db[skip : skip + limit]
+
+# Optional query parameter and bool type conversion
+# Optionalクエリパラメータとbool型変換
+@app.get("/items/{item_id}")
+async def read_item(item_id: str, q: str | None = None, short: bool = False):
+    # item_id is a path param; q and short are query params
+    # item_idはパスパラメータ、q・shortはクエリパラメータ
+    item = {"item_id": item_id}
+    if q:
+        item.update({"q": q})
+    if not short:
+        item.update({"description": "This is an amazing item with a long description"})
+    return item
