@@ -55,6 +55,19 @@ async def create_item(item: Item):
 # 💡 Interview tip: model_dump() is Pydantic v2; .dict() is v1 (deprecated)
 # model_dump()はPydantic v2。面接でv1/v2の違いを聞かれることがある
 
+# POST endpoint using model_dump()
+# model_dump()を使って辞書に変換・加工してから返すエンドポイント
+@app.post("/item/with-tax")
+async def create_item_with_tax(item: Item):
+    # model_dump() is Pydantic v2. Do NOT use .dict() in new code.
+    # model_dump()はPydantic v2の書き方。.dict()は非推奨
+    item_dict = item.model_dump()
+    if item.tax is not None:
+        price_with_tax = item.price + item.tax
+        item_dict.update({"price_with_tax": price_with_tax})
+    return item_dict
+
+
 
 # ============================================================
 # STEP 4: PUT endpoint – body + path parameter
