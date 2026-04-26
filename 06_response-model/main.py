@@ -28,11 +28,11 @@ app = FastAPI()
 # FastAPI validates, serializes, and generates OpenAPI schema from return type
 # 戻り値の型から自動でバリデーション・シリアライズ・OpenAPI生成
 @app.post("/items/")
-async def ceate_item(item: Item) -> Item:
-    return Item
+async def create_item(item: Item) -> Item:
+    return item
 
 
-@app.get("/items")
+@app.get("/items/")
 async def read_items() -> list[Item]:
     return [
         Item(name="Ledger Entry", price=100.0),
@@ -85,3 +85,23 @@ async def read_item(item_id: str):
 )
 async def read_item_public(item_id: str):
     return items_db[item_id]
+
+
+# --- Section 6: Return Response directly ---
+# When returning Response/JSONResponse/RedirectResponse, FastAPI handles it automatically
+# Response 系を直接返す場合、FastAPI が自動的に処理する
+@app.get("/portal", response_model=None)
+async def get_portal(teleport: bool = False) -> JSONResponse | RedirectResponse:
+    if teleport:
+        return RedirectResponse(url="https://fastapi.tiangolo.com")
+    return JSONResponse(content={"message": "Welcome to the API portal."})
+
+
+# --- Section 7: Disable response model with response_model=None ---
+# Use when return type annotation is non-Pydantic union
+# Pydantic 非対応のユニオン型を使う場合に response_model を無効化する
+@app.get("/portal/v2", response_model=None)
+async def get_portal_v2(teleport: bool = False) -> JSONResponse | dict:
+    if teleport:
+        return RedirectResponse(url="https://fastapi.tiangolo.com")
+    return {"message": "Portal v2 without response model validation."}
