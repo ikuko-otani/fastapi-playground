@@ -68,6 +68,30 @@ async def read_item_header(item_id: str):
 # Add GET /pay/{amount} that raises it when amount <= 0.
 # PaymentException クラスを定義し、ハンドラを登録する
 
+# Custom domain exception for invalid payments
+# 無効な支払い金額に対するドメイン固有の例外クラス
+class PaymentException(Exception):
+    def __init__(self, amount: float):
+        self.amount = amount
+
+
+# Register a global handler for PaymentException
+# PaymentException をグローバルに補足するハンドラーを登録
+@app.exception_handler(PaymentException)
+async def payment_exception_handler(request: Request, exc: PaymentException):
+    return JSONResponse(
+        status_code=422,
+        content={"message": f"Invalid payment amount: {exc.amount}. Must be > 0."},
+        # 金額が無効（0以下）であることをクライアントに通知
+    )
+
+
+@app.get("/pay/{amount}")
+async def process_payment(amount: float):
+    if amount <= 0:
+        raise PaymentException(amount=amount)
+    return {"status": "ok", "amount": amount}
+
 
 # ============================================================
 # STEP 4: Override RequestValidationError handler — ✍️ write this yourself
