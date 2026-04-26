@@ -38,6 +38,7 @@ async def read_item(item_id: str):
         raise HTTPException(status_code=404, detail="Item not found")
     return {"item": items[item_id]}
 
+
 # ============================================================
 # STEP 2: Custom headers on HTTPException — ✍️ write this yourself
 # Step 2 カスタムヘッダー付きエラー — 自分で入力
@@ -45,6 +46,17 @@ async def read_item(item_id: str):
 # TODO: Add GET /items-header/{item_id} that raises HTTPException
 # with headers={"X-Error": "..."}.
 # headersパラメータ付き HTTPException を発生させるエンドポイントを作成
+
+@app.get("/items-header/{item_id}")
+async def read_item_header(item_id: str):
+    if item_id not in items:
+        raise HTTPException(
+            status_code=404,
+            detail="Item not found",
+            headers={"X-Error": "Item does not exist"},
+            # カスタムヘッダーを付与（セキュリティ・トレーシング用途）
+        )
+    return {"item": items[item_id]}
 
 
 # ============================================================
