@@ -102,6 +102,26 @@ async def process_payment(amount: float):
 # Add POST /payments/ with a Pydantic model (amount: float, currency: str).
 # RequestValidationError ハンドラを上書き。Pydanticモデル付きPOSTエンドポイントを追加
 
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    return JSONResponse(
+        status_code=422,
+        content=jsonable_encoder(
+            {"detail": exc.errors(), "body": exc.body}
+            # エラー詳細と、受信したリクエストボディの両方を返す
+        ),
+    )
+
+# Import PaymentRequest from schemas
+# schemas.py から PaymentRequest モデルを import する
+from schemas import PaymentRequest
+
+
+@app.post("/payments/")
+async def create_payment(payment: PaymentRequest):
+    # Pydantic validates amount > 0 and currency length automatically
+    # Pydantic が amount と currency を自動バリデーション
+    return {"status": "accepted", "payment": payment}
 
 # ============================================================
 # STEP 5 (optional): Reuse default handlers with extra logging
