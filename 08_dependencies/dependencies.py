@@ -29,3 +29,5 @@ def common_parameters(
 # TODO: Step 3 — define CommonsDep as Annotated type alias
 # Step3 — Annotated型エイリアス CommonsDep を定義する
 # Hint: CommonsDep = Annotated[dict, Depends(common_parameters)]
+
+CommonsDep = Annotated[dict, Depends(common_parameters)]

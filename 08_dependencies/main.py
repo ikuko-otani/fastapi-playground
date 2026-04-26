@@ -19,10 +19,6 @@ app = FastAPI()
 
 # TODO: Step 1 — implement /items/ endpoint using Depends()
 # Step1 — Depends()を使った /items/ エンドポイントを実装する
-# Hint:
-#   @app.get("/items/")
-#   async def read_items(commons: dict = Depends(common_parameters)):
-#       return commons
 
 @app.get("/items/")
 async def read_items(commons: dict = Depends(common_parameters)):
@@ -31,10 +27,6 @@ async def read_items(commons: dict = Depends(common_parameters)):
 
 # TODO: Step 2 — implement /users/ endpoint reusing the same dependency
 # Step2 — 同じ依存関数を再利用した /users/ エンドポイントを実装する
-# Hint:
-#   @app.get("/users/")
-#   async def read_users(commons: dict = Depends(common_parameters)):
-#       return commons
 
 @app.get("/users/")
 async def read_users(commons: dict = Depends(common_parameters)):
@@ -43,7 +35,13 @@ async def read_users(commons: dict = Depends(common_parameters)):
 
 # TODO: Step 3 — refactor using Annotated type alias (CommonsDep)
 # Step3 — Annotated型エイリアス（CommonsDep）でリファクタリングする
-# Hint: from dependencies import CommonsDep
-#   @app.get("/items/")
-#   async def read_items(commons: CommonsDep):
-#       return commons
+
+from dependencies import common_parameters, CommonsDep
+
+@app.get("/items/")
+async def read_items(commons: CommonsDep):
+    return commons
+
+@app.get("/users/")
+async def read_users(commons: CommonsDep):
+    return commons
