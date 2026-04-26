@@ -14,12 +14,10 @@
 #   7. Returning Response directly (JSONResponse, RedirectResponse)
 #   8. response_model=None to disable validation
 
-# TODO: Fill in the implementation following the study guide (Step 1 ~ Step 4)
-# 日本語訳：以下に学習ガイド（Step 1〜4）に従って実装を追加してください
-
 from fastapi import FastAPI
 
 # Type hints are mandatory in FastAPI — they drive validation, serialization, and OpenAPI docs
-# 日本語訳：型ヒントはFastAPIの必須要件 — バリデーション・シリアライズ・OpenAPI生成に直結します
+# 型ヒントはFastAPIの必須要件 — バリデーション・シリアライズ・OpenAPI生成に直結します
 
 app = FastAPI()
+
