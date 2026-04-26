@@ -55,3 +55,33 @@ async def create_user(user: UserIn) -> Any:
 @app.post("/user/v2")
 async def create_user_v2(user: UserInV2) -> BaseUser:
     return user
+
+
+# --- Section 4: response_model_exclude_unset ---
+# Only return fields that were explicitly set (great for PATCH in payment-ledger-api)
+# 明示的にセットされたフィールドのみ返す（PATCH API に最適）
+items_db = {
+    "foo": {"name": "Foo", "price": 50.2},
+    "bar": {"name": "Bar", "description": "The Bar fighter", "price": 62.0, "tax": 20.2},
+}
+
+
+@app.get(
+    "/items/{item_id}",
+    response_model=Item,
+    response_model_exclude_unset=True,
+)
+async def read_item(item_id: str):
+    return items_db[item_id]
+
+
+# --- Section 5: response_model_include / response_model_exclude ---
+# Include only specific fields in response
+# レスポンスに含めるフィールドを限定する
+@app.get(
+    "/items/{item_id}/public",
+    response_model=Item,
+    response_model_exclude={"tax"},
+)
+async def read_item_public(item_id: str):
+    return items_db[item_id]
