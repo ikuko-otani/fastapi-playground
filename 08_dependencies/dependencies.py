@@ -10,13 +10,6 @@ from fastapi import Depends
 
 # TODO: Step 1 — define common_parameters(q, skip, limit)
 # Step1 — common_parameters(q, skip, limit) 依存関数を定義する
-# Hint:
-#   def common_parameters(
-#       q: str | None = None,
-#       skip: int = 0,
-#       limit: int = 100,
-#   ) -> dict:
-#       return {"q": q, "skip": skip, "limit": limit}
 
 def common_parameters(
     q: str | None = None,
@@ -28,6 +21,10 @@ def common_parameters(
 
 # TODO: Step 3 — define CommonsDep as Annotated type alias
 # Step3 — Annotated型エイリアス CommonsDep を定義する
-# Hint: CommonsDep = Annotated[dict, Depends(common_parameters)]
 
 CommonsDep = Annotated[dict, Depends(common_parameters)]
+
+def sync_dep() -> dict:
+    # Sync dependency — FastAPI handles it correctly even in async routes
+    # 同期依存関数 — 非同期ルートでも FastAPI が正しく処理する
+    return {"source": "sync_dep"}

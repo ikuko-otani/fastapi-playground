@@ -36,7 +36,7 @@ async def read_users(commons: dict = Depends(common_parameters)):
 # TODO: Step 3 — refactor using Annotated type alias (CommonsDep)
 # Step3 — Annotated型エイリアス（CommonsDep）でリファクタリングする
 
-from dependencies import common_parameters, CommonsDep
+from dependencies import common_parameters, CommonsDep, sync_dep
 
 @app.get("/items/")
 async def read_items(commons: CommonsDep):
@@ -45,3 +45,7 @@ async def read_items(commons: CommonsDep):
 @app.get("/users/")
 async def read_users(commons: CommonsDep):
     return commons
+
+@app.get("/check-sync")
+async def check_sync(info: dict = Depends(sync_dep)):
+    return info
