@@ -20,6 +20,7 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
+
 # ============================================================
 # STEP 1: Basic HTTPException — ✍️ write this yourself
 # Step 1 HTTPException の基本 — 自分で入力
@@ -123,9 +124,16 @@ async def create_payment(payment: PaymentRequest):
     # Pydantic が amount と currency を自動バリデーション
     return {"status": "accepted", "payment": payment}
 
+
 # ============================================================
 # STEP 5 (optional): Reuse default handlers with extra logging
 # Step 5（任意）：デフォルトハンドラを再利用しながら追加ログを出力
 # ============================================================
 # TODO: Combine custom logging (print) + await http_exception_handler(...)
 # カスタムログとデフォルトハンドラを組み合わせる
+
+@app.exception_handler(StarletteHTTPException)
+async def custom_http_exception_handler(request: Request, exc: StarletteHTTPException):
+    print(f"[ERROR] HTTP {exc.status_code} on {request.url}: {exc.detail}")
+    # エラーをログ出力してからデフォルトのレスポンスを返す
+    return await http_exception_handler(request, exc)
