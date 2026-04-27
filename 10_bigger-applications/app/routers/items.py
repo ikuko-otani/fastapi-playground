@@ -1,14 +1,16 @@
 # Items router - path operations for /items endpoints
-# 日本語訳：アイテムルーター - /items エンドポイントのパスオペレーション
+# アイテムルーター - /items エンドポイントのパスオペレーション
 
 from fastapi import APIRouter, Depends, HTTPException
 
 # TODO: Import get_token_header from dependencies
-# 日本語訳：dependenciesから get_token_header をインポートする
-# from ..dependencies import get_token_header
+# dependenciesから get_token_header をインポートする
+
+from fastapi import APIRouter, Depends, HTTPException
+from ..dependencies import get_token_header
 
 # TODO: Create APIRouter with prefix, tags, dependencies, responses
-# 日本語訳：prefix, tags, dependencies, responses 付きで APIRouter を作成する
+# prefix, tags, dependencies, responses 付きで APIRouter を作成する
 # router = APIRouter(
 #     prefix="/items",
 #     tags=["items"],
@@ -16,5 +18,34 @@ from fastapi import APIRouter, Depends, HTTPException
 #     responses={404: {"description": "Not found"}},
 # )
 
+router = APIRouter(
+    prefix="/items",
+    tags=["items"],
+    dependencies=[Depends(get_token_header)],
+    responses={404: {"description": "Not found"}}
+)
+
 # TODO: Add fake DB and path operations
-# 日本語訳：フェイクDBとパスオペレーションを追加する
+# フェイクDBとパスオペレーションを追加する
+
+fake_items_db = {"plumbus": {"name": "Plumbus"}, "gun": {"name": "Portal Gun"}}
+
+@router.get("/")
+async def read_items():
+    return fake_items_db
+
+@router.get("/{item_id}")
+async def read_item(item_id: str):
+    if item_id not in fake_items_db:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return {"name": fake_items_db[item_id]["name"], "item_id": item_id}
+
+@router.put(
+    "/{item_id}",
+    tags={"custom"},
+    responses={403: {"description": "Operation forbidden"}}
+)
+async def update_item(item_id: str):
+    if item_id != "plumbus":
+        raise HTTPException(status_code=403, detail="You can only update the item: plumbus")
+    return {"item_id": item_id, "name": "The great Plumbus"}
